@@ -94,7 +94,7 @@ class SDSS_Survey(surveycoord.SurveyCoord):
         query = "SELECT GN.distance, "
         query += "p.objid, "
 
-        query += "pz.z as redshift, pz.zErr as redshift_error\n"
+        query += "pz.z as redshift, pz.zErr as redshift_error, p.expRad_g as expRad_g, p.expRad_r as expRad_r, p.deVRad_g as deVRad_g, p.deVRad_r as deVRad_r\n"
         query += "FROM PhotoObj as p\n"
         query += "JOIN dbo.fGetNearbyObjEq({:f},{:f},{:f}) AS GN\nON GN.objID=p.objID\n".format(
             self.coord.ra.value,self.coord.dec.value,self.radius.to('arcmin').value)
@@ -116,10 +116,18 @@ class SDSS_Survey(surveycoord.SurveyCoord):
         # Init
         photom_catalog['photo_z'] = -9999.
         photom_catalog['photo_zerr'] = -9999.
+        photom_catalog['expRad_g'] = -9999.
+        photom_catalog['expRad_r'] = -9999.
+        photom_catalog['deVRad_g'] = -9999.
+        photom_catalog['deVRad_r'] = -9999.
         # Fill
         if np.any(gdz):
             photom_catalog['photo_z'][matches[gdz]] = photz_cat['redshift'][np.where(gdz)]
             photom_catalog['photo_zerr'][matches[gdz]] = photz_cat['redshift_error'][np.where(gdz)]
+            photom_catalog['expRad_g'][matches[gdz]] = photz_cat['expRad_g'][np.where(gdz)]
+            photom_catalog['expRad_r'][matches[gdz]] = photz_cat['expRad_r'][np.where(gdz)]
+            photom_catalog['deVRad_g'][matches[gdz]] = photz_cat['deVRad_g'][np.where(gdz)]
+            photom_catalog['deVRad_r'][matches[gdz]] = photz_cat['deVRad_r'][np.where(gdz)]
 
         # Trim down catalog
         trim_catalog = trim_down_catalog(photom_catalog, keep_photoz=True)
