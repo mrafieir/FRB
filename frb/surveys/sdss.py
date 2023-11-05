@@ -120,8 +120,8 @@ class SDSS_Survey(surveycoord.SurveyCoord):
         photom_catalog['expRad_r'] = -9999.
         photom_catalog['deVRad_g'] = -9999.
         photom_catalog['deVRad_r'] = -9999.
-        photom_catalog['mode'] = -9999.
-        photom_catalog['resolveStatus'] = -9999.
+        photom_catalog['mode'] = -9999
+        photom_catalog['resolveStatus'] = -9999
         # Fill
         if np.any(gdz):
             photom_catalog['photo_z'][matches[gdz]] = photz_cat['redshift'][np.where(gdz)]
