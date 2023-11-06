@@ -73,7 +73,7 @@ class SDSS_Survey(surveycoord.SurveyCoord):
 
         """
         if photoobj_fields is None:
-            photoobj_fs = ['ra', 'dec', 'objid', 'run', 'rerun', 'camcol', 'field','type']
+            photoobj_fs = ['ra', 'dec', 'objid', 'run', 'rerun', 'camcol', 'field', 'type']
             mags = ['modelMag_'+band for band in SDSS_bands]
             magsErr = ['modelMagErr_'+band for band in SDSS_bands]
             extinct = ["extinction_"+band for band in SDSS_bands]
@@ -94,7 +94,10 @@ class SDSS_Survey(surveycoord.SurveyCoord):
         query = "SELECT GN.distance, "
         query += "p.objid, "
 
-        query += "pz.z as redshift, pz.zErr as redshift_error, p.expRad_g as expRad_g, p.expRad_r as expRad_r, p.deVRad_g as deVRad_g, p.deVRad_r as deVRad_r, p.mode as mode, p.resolveStatus as resolveStatus\n"
+        query += ("pz.z as redshift, pz.zErr as redshift_error, p.expRad_g as expRad_g, p.expRad_r as expRad_r, " +
+                  "p.expRad_i as expRad_i, p.expRad_z as expRad_z, p.deVRad_g as deVRad_g, p.deVRad_r as deVRad_r, " +
+                  "p.deVRad_i as deVRad_i, p.deVRad_z as deVRad_z, p.mode as mode, p.resolveStatus as resolveStatus\n")
+
         query += "FROM PhotoObj as p\n"
         query += "JOIN dbo.fGetNearbyObjEq({:f},{:f},{:f}) AS GN\nON GN.objID=p.objID\n".format(
             self.coord.ra.value,self.coord.dec.value,self.radius.to('arcmin').value)
@@ -118,8 +121,12 @@ class SDSS_Survey(surveycoord.SurveyCoord):
         photom_catalog['photo_zerr'] = -9999.
         photom_catalog['expRad_g'] = -9999.
         photom_catalog['expRad_r'] = -9999.
+        photom_catalog['expRad_i'] = -9999.
+        photom_catalog['expRad_z'] = -9999.
         photom_catalog['deVRad_g'] = -9999.
         photom_catalog['deVRad_r'] = -9999.
+        photom_catalog['deVRad_i'] = -9999.
+        photom_catalog['deVRad_z'] = -9999.
         photom_catalog['mode'] = -9999
         photom_catalog['resolveStatus'] = -9999
         # Fill
@@ -128,8 +135,12 @@ class SDSS_Survey(surveycoord.SurveyCoord):
             photom_catalog['photo_zerr'][matches[gdz]] = photz_cat['redshift_error'][np.where(gdz)]
             photom_catalog['expRad_g'][matches[gdz]] = photz_cat['expRad_g'][np.where(gdz)]
             photom_catalog['expRad_r'][matches[gdz]] = photz_cat['expRad_r'][np.where(gdz)]
+            photom_catalog['expRad_i'][matches[gdz]] = photz_cat['expRad_i'][np.where(gdz)]
+            photom_catalog['expRad_z'][matches[gdz]] = photz_cat['expRad_z'][np.where(gdz)]
             photom_catalog['deVRad_g'][matches[gdz]] = photz_cat['deVRad_g'][np.where(gdz)]
             photom_catalog['deVRad_r'][matches[gdz]] = photz_cat['deVRad_r'][np.where(gdz)]
+            photom_catalog['deVRad_i'][matches[gdz]] = photz_cat['deVRad_i'][np.where(gdz)]
+            photom_catalog['deVRad_z'][matches[gdz]] = photz_cat['deVRad_z'][np.where(gdz)]
             photom_catalog['mode'][matches[gdz]] = photz_cat['mode'][np.where(gdz)]
             photom_catalog['resolveStatus'][matches[gdz]] = photz_cat['resolveStatus'][np.where(gdz)]
 
