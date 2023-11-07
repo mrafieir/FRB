@@ -43,8 +43,7 @@ photom["Pan-STARRS"]["Pan-STARRS_field"] = 'field'
 # Define the default set of query fields
 # See: https://outerspace.stsci.edu/display/PANSTARRS/PS1+StackObjectView+table+fields
 # for additional Fields
-_DEFAULT_query_fields = ['objID','raStack','decStack','objInfoFlag','qualityFlag', 
-                         'rKronRad']#, 'rPSFMag', 'rKronMag']
+_DEFAULT_query_fields = ['objID', 'raStack', 'decStack', 'objInfoFlag', 'qualityFlag', 'rKronRad']
 _DEFAULT_query_fields +=['{:s}PSFmag'.format(band) for band in PanSTARRS_bands]
 _DEFAULT_query_fields +=['{:s}PSFmagErr'.format(band) for band in PanSTARRS_bands]
 _DEFAULT_query_fields +=['{:s}KronMag'.format(band) for band in PanSTARRS_bands]
